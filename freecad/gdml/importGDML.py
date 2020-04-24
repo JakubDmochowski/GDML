@@ -764,11 +764,15 @@ def getVolSolid(name):
     solid = solids.find("*[@name='%s']" % name )
     return solid
 
-def parsePhysVol(parent,physVol,phylvl,displayMode):
+def parsePhysVol(parent,physVol,phylvl,px,py,pz,rot,displayMode):
     # physvol is xml entity
     GDMLShared.trace("ParsePhyVol : level : "+str(phylvl))
-    px, py, pz = GDMLShared.getPosition(physVol)
+    x, y, z = GDMLShared.getPosition(physVol)
+    px = px + x
+    py = py + y
+    pz = pz + z
     rot = GDMLShared.getRotation(physVol)
+    # Need to deal with rotation
     volref = GDMLShared.getRef(physVol,"volumeref")
     if volref != None :
        GDMLShared.trace("Volume ref : "+volref)
@@ -832,7 +836,7 @@ def expandVolume(parent,name,px,py,pz,rot,phylvl,displayMode) :
               if phylvl >= 0 :
                  phylvl += 1 
               # If negative always parse otherwise increase level    
-              parsePhysVol(parent,pv,phylvl,displayMode)
+              parsePhysVol(parent,pv,phylvl,px,py,pz,rot,displayMode)
            else :  # Just Add to structure 
               from PySide import QtGui, QtCore 
               volref = GDMLShared.getRef(pv,"volumeref")
@@ -878,7 +882,7 @@ def expandVolume(parent,name,px,py,pz,rot,phylvl,displayMode) :
               # create solids at pos & rot in physvols
               #parsePhysVol(part,pv,displayMode)
               #obj = parent.newObject("App::Part",name)
-              parsePhysVol(parent,pv,phylvl,displayMode)
+              parsePhysVol(parent,pv,phylvl,px,py,pz,rot,displayMode)
        else :
            print("Not Volume or Assembly") 
 
