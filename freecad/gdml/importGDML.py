@@ -733,24 +733,26 @@ def getVolSolid(name):
     solid = solids.find("*[@name='%s']" % name )
     return solid
 
-def parsePhysVol(parent,physVol,phylvl,px,py,pz,rot,displayMode):
+def printRot(txt,rot) :
+    if rot != None :
+       print(txt+str(rot.attrib))
+    else :
+       print(txt+' None')
+
+def parsePhysVol(parent,physVol,phylvl,displayMode):
     # physvol is xml entity
-    GDMLShared.setTrace(True)
+    #GDMLShared.setTrace(True)
     GDMLShared.trace("ParsePhyVol : level : "+str(phylvl))
+    # will return 0,0,0 it position not set
     nx, ny, nz = GDMLShared.getPosition(physVol)
     nrot = GDMLShared.getRotation(physVol)
-    print('rot : '+str(rot))
+    #printRot('nrot : ',nrot)
     volref = GDMLShared.getRef(physVol,"volumeref")
     if volref != None :
-       #print(volref+ 'px '+str(px)+' py '+str(py)+' pz '+str(pz))
        GDMLShared.trace("Volume ref : "+volref)
        part = parent.newObject("App::Part",volref)
-       part.Placement = GDMLShared.processPlacement(FreeCAD.Vector(px,py,pz),rot)
-       #print('New Vol : '+volref)
-       #print('px '+str(px)+' py '+str(py)+' pz '+str(pz))
-       #part.Placement = GDMLShared.processPlacement(FreeCAD.Vector(px,py,pz),rot)
-       GDMLShared.trace("px : "+str(px)+" : "+str(py)+" : "+str(pz))
-       GDMLShared.setTrace(False)
+       # No need to process placement let expandVolume do it
+       #GDMLShared.setTrace(False)
        expandVolume(part,volref,nx,ny,nz,nrot,phylvl,displayMode)
 
 # ParseVolume name - structure is global
@@ -810,7 +812,7 @@ def expandVolume(parent,name,px,py,pz,rot,phylvl,displayMode) :
               if phylvl >= 0 :
                  phylvl += 1 
               # If negative always parse otherwise increase level    
-              parsePhysVol(parent,pv,phylvl,px,py,pz,rot,displayMode)
+              parsePhysVol(parent,pv,phylvl,displayMode)
            else :  # Just Add to structure 
               from PySide import QtGui, QtCore 
               volref = GDMLShared.getRef(pv,"volumeref")
@@ -856,7 +858,7 @@ def expandVolume(parent,name,px,py,pz,rot,phylvl,displayMode) :
               # create solids at pos & rot in physvols
               #parsePhysVol(part,pv,displayMode)
               #obj = parent.newObject("App::Part",name)
-              parsePhysVol(parent,pv,phylvl,px,py,pz,displayMode)
+              parsePhysVol(parent,pv,phylvl,displayMode)
        else :
            print("Not Volume or Assembly") 
 

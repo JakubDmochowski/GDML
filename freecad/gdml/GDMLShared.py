@@ -188,9 +188,9 @@ def processPlacement(base,rot) :
             z = getDegrees(radianFlg,float(eval(rot.attrib['z'])))
             trace('z deg : '+str(z))
 
-        rotX = FreeCAD.Rotation(FreeCAD.Vector(1,0,0), -x)
-        rotY = FreeCAD.Rotation(FreeCAD.Vector(0,1,0), -y)
-        rotZ = FreeCAD.Rotation(FreeCAD.Vector(0,0,1), -z)
+        rotX = FreeCAD.Rotation(FreeCAD.Vector(-1,0,0), x)
+        rotY = FreeCAD.Rotation(FreeCAD.Vector(0,-1,0), y)
+        rotZ = FreeCAD.Rotation(FreeCAD.Vector(0,0,-1), z)
 
         rot = rotX.multiply(rotY).multiply(rotZ)
         #rot = rotX
@@ -246,7 +246,7 @@ def getDefinedRotation(name) :
 def getRotation(xmlEntity) :
     trace('GetRotation')
     rotref = getRef(xmlEntity,"rotationref")
-    trace(rotref)
+    trace('rotation ref '+str(rotref))
     if rotref is not None :
        rot = define.find("rotation[@name='%s']" % rotref )
     else :
