@@ -735,7 +735,7 @@ def getVolSolid(name):
 
 def parsePhysVol(parent,physVol,phylvl,px,py,pz,rot,displayMode):
     # physvol is xml entity
-    GDMLShared.setTrace(True)
+    #GDMLShared.setTrace(True)
     GDMLShared.trace("ParsePhyVol : level : "+str(phylvl))
     #nx, ny, nz = GDMLShared.getPosition(physVol)
     nx, ny, nz = GDMLShared.testPosition(physVol,px,py,pz)
